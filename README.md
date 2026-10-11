@@ -6,7 +6,7 @@ A complete relational database system and secure backend API for managing a mult
 
 ## Project Overview
 
-This project was developed as part of the Database Management Systems I (ITEC343) course at **Cyprus International University**. It combines a 14-table PostgreSQL database with a secure RESTful FastAPI backend to simulate a real-world restaurant management system—handling menu items, orders, payments, reservations, and customer ratings.
+This project was developed as part of the Database Management Systems I (ITEC343) course at **Cyprus International University**. It combines a 14-table PostgreSQL database with a secure RESTful FastAPI backend to simulate a real-world restaurant management system-handling menu items, orders, payments, reservations, and customer ratings.
 
 ---
 
