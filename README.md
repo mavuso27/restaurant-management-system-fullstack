@@ -10,6 +10,13 @@ This project was developed as part of the Database Management Systems I (ITEC343
 
 ---
 
+## Live Demo & API Documentation
+
+The backend API is deployed and hosted live on the cloud via Render:
+- **Interactive Swagger UI Documentation:** [https://restaurant-api-qfpz.onrender.com/docs](https://restaurant-api-qfpz.onrender.com/docs)
+
+---
+
 ## Database Structure
 
 The system contains **14 tables:**
@@ -93,28 +100,29 @@ rate (rate_id PK, rating, comment, customer_id FK → customer, meal_id FK → m
 
 ## Technologies Used
 
-- Python & FastAPI (RESTful API & Security)
+- Python & FastAPI (RESTful API, OAuth2, JWT Security & Rate Limiting)
 - PostgreSQL 18 & pgAdmin 4
-- Pydantic & SQLAlchemy
+- SQLAlchemy & Pydantic
+- Render (Cloud Web Service Deployment)
 
 ---
 
 ## Repository Structure
 
 ```
-Restuarant_api/
-├── app/                  # FastAPI backend source code & security
-├── database/             # PostgreSQL SQL scripts & DDL/DML
-├── docs/                 # ER diagrams & documentation assets
-├── .env                  # Environment configuration
-├── .gitignore            # Git exclusion rules
-├── README.md             # Project documentation
-└── requirements.txt      # Python dependencies
+restaurant-management-system-fullstack/
+├── app/                # FastAPI backend source code & security
+├── database/           # PostgreSQL SQL scripts & DDL/DML
+├── docs/               # ER diagrams & documentation assets
+├── .env                # Environment configuration (Local)
+├── .gitignore          # Git exclusion rules
+├── README.md           # Project documentation
+└── requirements.txt    # Python dependencies
 ```
 
 ---
 
-## How to Run
+## How to Run Locally
 
 1. **Database Setup:**
    - Install PostgreSQL 18 from [postgresql.org](https://www.postgresql.org/download)
@@ -122,6 +130,7 @@ Restuarant_api/
 
 2. **Backend API Setup:**
    - Set up your virtual environment and install dependencies: `pip install -r requirements.txt`
+   - Configure your local `.env` file with your database URL, secret keys, and settings.
    - Run the FastAPI application using Uvicorn: `uvicorn app.main:app --reload`
    - Access the interactive Swagger documentation at `http://127.0.0.1:8000/docs`.
 
