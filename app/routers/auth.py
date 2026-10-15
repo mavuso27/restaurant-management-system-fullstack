@@ -16,21 +16,19 @@ GITHUB_USER_URL = "https://api.github.com/user"
 
 
 @router.get("/login")
-def github_login(response: Response):
-    
+def github_login(request: Request, response: Response):
     state = secrets.token_urlsafe(32)
     
-
-    response = RedirectResponse(
-        f"{GITHUB_AUTH_URL}?client_id={settings.GITHUB_CLIENT_ID}&scope=user:email&state={state}"
-    )
+    auth_url = f"{GITHUB_AUTH_URL}?client_id={settings.GITHUB_CLIENT_ID}&scope=user:email&state={state}"
+    
+    response = RedirectResponse(url=auth_url)
     response.set_cookie(
         key="oauth_state", 
         value=state, 
         httponly=True, 
-        secure=True,          
+        secure=request.url.scheme == "https",  
         samesite="lax", 
-        max_age=300           
+        max_age=300            
     )
     return response
 
