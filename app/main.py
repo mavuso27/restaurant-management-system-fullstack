@@ -4,6 +4,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from app.routers import meals, customers, orders, auth
+from app.database import Base, engine
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -41,6 +42,8 @@ Hosted on Render free tier - please allow 30-60 seconds for initial server spin-
     }
 )
 
+
+Base.metadata.create_all(bind=engine)
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -102,3 +105,4 @@ def root():
 @app.get("/health", tags=["Root"])
 def health_check():
     return {"status": "healthy"}
+
