@@ -134,6 +134,17 @@ restaurant-management-system-fullstack/
    - Run the FastAPI application using Uvicorn: `uvicorn app.main:app --reload`
    - Access the interactive Swagger documentation at `http://127.0.0.1:8000/docs`.
 
+   ## Environment Configuration
+
+1. Clone the repository.
+2. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   
+   - Fill in your Supabase PostgreSQL credentials, GitHub OAuth App client keys, and generate a secure SECRET_KEY.
+
+
+
 ---
 
 ## Author
