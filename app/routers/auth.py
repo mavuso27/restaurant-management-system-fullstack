@@ -7,6 +7,7 @@ from app.database import get_db
 from app.models.models import Customer
 from app.security.security import create_access_token
 from app.config import settings
+from app.security.security import verify_token, oauth2_scheme
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -102,16 +103,22 @@ async def github_callback(
     return {"access_token": access_token, "token_type": "bearer", "user": github_name}
 
 #-------I will start debugging from here.
-def get_current_user(request: Request, db: Session = Depends(get_db)):
-    token = request.headers.get("Authorization")
-    if not token or not token.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    token = token.split(" ")[1]
-    from app.security.security import verify_token
+@router.get("/me", tags=["Authentication"])
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    """
+    Extracts and verifies the JWT token via Bearer authentication, 
+    linking it to the authenticated customer in Supabase.
+    """
     github_id = verify_token(token)
     if not github_id:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        raise HTTPException(
+            status_code=401, 
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     customer = db.query(Customer).filter(Customer.github_id == github_id).first()
     if not customer:
         raise HTTPException(status_code=401, detail="User not found")
+        
     return customer
