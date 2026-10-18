@@ -7,7 +7,8 @@ from app.database import get_db
 from app.models.models import Customer
 from app.security.security import create_access_token
 from app.config import settings
-from app.security.security import verify_token, oauth2_scheme
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from app.security.security import verify_token, security
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -104,11 +105,12 @@ async def github_callback(
 
 #-------I will start debugging from here.
 @router.get("/me", tags=["Authentication"])
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
     """
     Extracts and verifies the JWT token via Bearer authentication, 
     linking it to the authenticated customer in Supabase.
     """
+    token = credentials.credentials
     github_id = verify_token(token)
     if not github_id:
         raise HTTPException(
