@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Numeric, Date, Time, ForeignKey,
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
+from sqlalchemy import Column, Integer, String, Boolean, Date
 
 
 class Category(Base):
@@ -84,6 +85,7 @@ class Customer(Base):
     email = Column(String(100), unique=True)
     country = Column(String(100), nullable=False, default="Unknown")
     join_date = Column(Date, server_default=func.now())
+    is_admin = Column(Boolean, default=False)
     github_id = Column(String(100), unique=True, nullable=True)
     access_token = Column(String(500), nullable=True)
 

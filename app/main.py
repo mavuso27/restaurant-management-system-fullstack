@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from app.routers import meals, customers, orders, auth
+from app.routers import meals, customers, orders, auth, categories, ingredients, employees, suppliers, tables, rates, reservations, payments
 from app.database import Base, engine
 
 limiter = Limiter(key_func=get_remote_address)
@@ -52,7 +52,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",      
     "http://127.0.0.1:3000",
-    "https://your-frontend-domain.vercel.app" # Replace with your live frontend domain when deployed
 ]
 
 app.add_middleware(
@@ -82,10 +81,18 @@ async def add_security_headers(request: Request, call_next):
     return response
 
 
-app.include_router(auth.router)
-app.include_router(meals.router)
-app.include_router(customers.router)
-app.include_router(orders.router)
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(meals.router, prefix="/meals", tags=["Meals"])
+app.include_router(customers.router, prefix="/customers", tags=["Customers"])
+app.include_router(orders.router, prefix="/orders", tags=["Orders"])
+app.include_router(categories.router, prefix="/categories", tags=["Categories"])
+app.include_router(ingredients.router, prefix="/ingredients", tags=["Ingredients"])
+app.include_router(employees.router, prefix="/employees", tags=["Employees"])
+app.include_router(suppliers.router, prefix="/suppliers", tags=["Suppliers"])
+app.include_router(tables.router, prefix="/tables", tags=["Tables"])
+app.include_router(rates.router, prefix="/rates", tags=["Rates"])
+app.include_router(reservations.router, prefix="/reservations", tags=["Reservations"])
+app.include_router(payments.router, prefix="/payments", tags=["Payments"])
 
 
 
