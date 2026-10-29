@@ -4,9 +4,12 @@ from datetime import date, time
 from decimal import Decimal
 
 
-#Category
+# Category
 class CategoryBase(BaseModel):
     name: str
+
+class CategoryCreate(CategoryBase):
+    pass
 
 class CategoryResponse(CategoryBase):
     category_id: int
@@ -14,11 +17,14 @@ class CategoryResponse(CategoryBase):
         from_attributes = True
 
 
-#Igredient
+# Ingredient
 class IngredientBase(BaseModel):
     name: str
     amount: Decimal
     unit: str
+
+class IngredientCreate(IngredientBase):
+    pass
 
 class IngredientResponse(IngredientBase):
     ing_no: int
@@ -26,12 +32,15 @@ class IngredientResponse(IngredientBase):
         from_attributes = True
 
 
-#Supplier
+# Supplier
 class SupplierBase(BaseModel):
     name: str
     phone: str
     address: str
     email: Optional[str] = None
+
+class SupplierCreate(SupplierBase):
+    pass
 
 class SupplierResponse(SupplierBase):
     supplier_id: int
@@ -39,11 +48,14 @@ class SupplierResponse(SupplierBase):
         from_attributes = True
 
 
-#Tables
+# Tables
 class TableBase(BaseModel):
     capacity: int
     location: str
     status: str
+
+class TableCreate(TableBase):
+    pass
 
 class TableResponse(TableBase):
     table_id: int
@@ -51,7 +63,7 @@ class TableResponse(TableBase):
         from_attributes = True
 
 
-#Employee
+# Employee
 class EmployeeBase(BaseModel):
     name: str
     role: str
@@ -60,13 +72,16 @@ class EmployeeBase(BaseModel):
     salary: Decimal
     hire_date: date
 
+class EmployeeCreate(EmployeeBase):
+    pass
+
 class EmployeeResponse(EmployeeBase):
     employee_id: int
     class Config:
         from_attributes = True
 
 
-#Customer
+# Customer
 class CustomerBase(BaseModel):
     name: str
     phone: str
@@ -84,7 +99,7 @@ class CustomerResponse(CustomerBase):
         from_attributes = True
 
 
-#Meal
+# Meal
 class MealBase(BaseModel):
     name: str
     price: Decimal
@@ -112,7 +127,7 @@ class MealResponse(MealBase):
         from_attributes = True
 
 
-#Order
+# Order
 class OrderBase(BaseModel):
     date: date
     time: time
@@ -136,7 +151,7 @@ class OrderResponse(OrderBase):
         from_attributes = True
 
 
-#Order item
+# Order item
 class OrderItemBase(BaseModel):
     quantity: int
     order_id: int
@@ -157,7 +172,7 @@ class OrderItemResponse(OrderItemBase):
         from_attributes = True
 
 
-#Payment
+# Payment
 class PaymentBase(BaseModel):
     payment_date: date
     method: str
@@ -179,7 +194,7 @@ class PaymentResponse(PaymentBase):
         from_attributes = True
 
 
-#Reservation 
+# Reservation 
 class ReservationBase(BaseModel):
     date: date
     time: time
@@ -196,7 +211,7 @@ class ReservationResponse(ReservationBase):
         from_attributes = True
 
 
-#Rate
+# Rate
 class RateBase(BaseModel):
     rating: int
     comment: Optional[str] = None
@@ -218,7 +233,7 @@ class RateResponse(RateBase):
         from_attributes = True
 
 
-#Auth
+# Auth
 class Token(BaseModel):
     access_token: str
     token_type: str
