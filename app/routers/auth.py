@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from httpx import AsyncClient
 from app.database import get_db
-from app.models.models import Customer
+from app.models import Customer
 from app.security.security import create_access_token
 from app.config import settings
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
