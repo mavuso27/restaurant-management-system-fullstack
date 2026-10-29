@@ -2,7 +2,7 @@
 
 A complete relational database system and secure backend API for managing a multi-cuisine restaurant, built with PostgreSQL 18 and FastAPI.
 
----
+----
 
 ## Project Overview
 
