@@ -1,4 +1,4 @@
-from fastapi.routers import APIRouter # type: ignore
+from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
