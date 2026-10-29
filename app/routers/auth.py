@@ -10,7 +10,7 @@ from app.config import settings
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.security.security import verify_token, security
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(tags=["Authentication"])
 
 GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
