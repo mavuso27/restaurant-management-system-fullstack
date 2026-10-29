@@ -4,8 +4,13 @@ from typing import List
 from app.database import get_db
 from app.models import Category
 from app.schemas.schemas import CategoryCreate, CategoryResponse
+from app.routers.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/categories",
+    tags=["Categories"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/", response_model=List[CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):

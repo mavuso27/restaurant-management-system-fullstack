@@ -4,8 +4,13 @@ from typing import List
 from app.database import get_db
 from app.models import Ingredient
 from app.schemas.schemas import IngredientBase, IngredientResponse
+from app.routers.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/ingredients",
+    tags=["Ingredients"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/", response_model=List[IngredientResponse])
 def get_ingredients(db: Session = Depends(get_db)):

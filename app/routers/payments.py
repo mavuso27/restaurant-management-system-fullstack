@@ -5,8 +5,13 @@ from typing import List
 from app.database import get_db
 from app.models import Payment
 from app.schemas.schemas import PaymentCreate, PaymentResponse
+from app.routers.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/payments",
+    tags=["Payments"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/", response_model=List[PaymentResponse])
 def get_payments(db: Session = Depends(get_db)):

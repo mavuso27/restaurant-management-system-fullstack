@@ -4,8 +4,13 @@ from typing import List
 from app.database import get_db
 from app.models import Reservation
 from app.schemas.schemas import ReservationCreate, ReservationResponse
+from app.routers.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/reservations",
+    tags=["Reservations"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/", response_model=List[ReservationResponse])
 def get_reservations(db: Session = Depends(get_db)):

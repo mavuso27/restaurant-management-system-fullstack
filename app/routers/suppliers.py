@@ -4,8 +4,13 @@ from typing import List
 from app.database import get_db
 from app.models import Supplier
 from app.schemas.schemas import SupplierBase, SupplierResponse
+from app.routers.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/suppliers",
+    tags=["Suppliers"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/", response_model=List[SupplierResponse])
 def get_suppliers(db: Session = Depends(get_db)):

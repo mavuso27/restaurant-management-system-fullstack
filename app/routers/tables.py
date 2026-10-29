@@ -4,8 +4,13 @@ from typing import List
 from app.database import get_db
 from app.models import Tables
 from app.schemas.schemas import TableBase, TableResponse
+from app.routers.auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/tables",
+    tags=["Tables"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/", response_model=List[TableResponse])
 def get_tables(db: Session = Depends(get_db)):
