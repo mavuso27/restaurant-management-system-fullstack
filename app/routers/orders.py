@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime, timezone
 from app.database import get_db
-from app.models.models import Order, OrderItem
+from app.models import Order, OrderItem
 from app.schemas.schemas import OrderCreate, OrderResponse, OrderItemCreate, OrderItemResponse
 from app.routers.auth import get_current_user
 from slowapi import Limiter
