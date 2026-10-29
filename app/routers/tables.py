@@ -9,11 +9,11 @@ router = APIRouter()
 
 @router.get("/", response_model=List[TableResponse])
 def get_tables(db: Session = Depends(get_db)):
-    return db.query(Table).all()
+    return db.query(Tables).all()
 
 @router.post("/", response_model=TableResponse, status_code=status.HTTP_201_CREATED)
 def create_table(table: TableBase, db: Session = Depends(get_db)):
-    db_table = Table(**table.dict())
+    db_table = Tables(**table.dict())
     db.add(db_table)
     db.commit()
     db.refresh(db_table)
