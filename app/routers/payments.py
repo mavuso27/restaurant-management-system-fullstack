@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models import Payment
-from app.schemas import PaymentCreate, PaymentResponse
+from app.schemas.schemas import PaymentCreate, PaymentResponse
 
 router = APIRouter()
 

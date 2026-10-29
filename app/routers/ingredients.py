@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models import Ingredient
-from app.schemas import IngredientBase, IngredientResponse
+from app.schemas.schemas import IngredientBase, IngredientResponse
 
 router = APIRouter()
 

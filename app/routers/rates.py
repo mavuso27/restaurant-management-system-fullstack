@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models import Rate
-from app.schemas import RateCreate, RateResponse
+from app.schemas.schemas import RateCreate, RateResponse
 
 router = APIRouter()
 
