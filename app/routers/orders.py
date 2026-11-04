@@ -9,7 +9,7 @@ from app.database import get_db
 from app.models import Order, OrderItem, Meal, Category, Employee
 from app.schemas.schemas import (
     OrderItemCreate, OrderItemResponse,
-    OrderPlaceRequest, OrderDetail, OrderLine, TipUpdate,
+    OrderPlaceRequest, OrderDetail, OrderLine,
 )
 from app.routers.auth import get_current_user
 from slowapi import Limiter
@@ -144,31 +144,6 @@ def create_order(
 
     db.refresh(new_order)
     return build_order_detail(new_order, db)
-
-
-@router.patch("/{order_id}/tip", response_model=OrderDetail)
-@limiter.limit("10/minute")
-def update_tip(
-    request: Request,
-    order_id: int,
-    body: TipUpdate,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
-):
-    order = db.query(Order).filter(Order.order_id == order_id).first()
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-
-    if order.customer_id != current_user.customer_id:
-        raise HTTPException(
-            status_code=403,
-            detail="You can only tip on your own orders"
-        )
-
-    order.tip = body.tip
-    db.commit()
-    db.refresh(order)
-    return build_order_detail(order, db)
 
 
 @router.post("/items", response_model=OrderItemResponse, status_code=status.HTTP_201_CREATED)
