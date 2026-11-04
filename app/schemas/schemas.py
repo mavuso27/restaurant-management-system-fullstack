@@ -4,7 +4,7 @@ from datetime import date, time
 from decimal import Decimal
 
 
-# Category
+
 class CategoryBase(BaseModel):
     name: str
 
@@ -17,7 +17,7 @@ class CategoryResponse(CategoryBase):
         from_attributes = True
 
 
-# Ingredient
+
 class IngredientBase(BaseModel):
     name: str
     amount: Decimal
@@ -32,7 +32,7 @@ class IngredientResponse(IngredientBase):
         from_attributes = True
 
 
-# Supplier
+
 class SupplierBase(BaseModel):
     name: str
     phone: str
@@ -48,7 +48,7 @@ class SupplierResponse(SupplierBase):
         from_attributes = True
 
 
-# Tables
+# 
 class TableBase(BaseModel):
     capacity: int
     location: str
@@ -63,7 +63,7 @@ class TableResponse(TableBase):
         from_attributes = True
 
 
-# Employee
+
 class EmployeeBase(BaseModel):
     name: str
     role: str
@@ -79,9 +79,8 @@ class EmployeeResponse(EmployeeBase):
     employee_id: int
     class Config:
         from_attributes = True
-
-
-# Customer
+        
+        
 class CustomerBase(BaseModel):
     name: str
     phone: str
@@ -99,7 +98,7 @@ class CustomerResponse(CustomerBase):
         from_attributes = True
 
 
-# Meal
+
 class MealBase(BaseModel):
     name: str
     price: Decimal
@@ -127,31 +126,7 @@ class MealResponse(MealBase):
         from_attributes = True
 
 
-# Order
-class OrderBase(BaseModel):
-    date: date
-    time: time
-    tip: Optional[Decimal] = Decimal("0.00")
-    customer_id: int
-    employee_id: int
-    table_id: int
 
-    @field_validator("tip")
-    def tip_must_be_positive(cls, v):
-        if v is not None and v < 0:
-            raise ValueError("Tip cannot be negative")
-        return v
-
-class OrderCreate(OrderBase):
-    pass
-
-class OrderResponse(OrderBase):
-    order_id: int
-    class Config:
-        from_attributes = True
-
-
-# Order item
 class OrderItemBase(BaseModel):
     quantity: int
     order_id: int
@@ -172,7 +147,48 @@ class OrderItemResponse(OrderItemBase):
         from_attributes = True
 
 
-# Payment
+
+class OrderItemCreateInline(BaseModel):
+    meal_id: int
+    quantity: int
+
+    @field_validator("quantity")
+    def quantity_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError("Quantity must be greater than 0")
+        return v
+
+
+# Order
+class OrderBase(BaseModel):
+    tip: Optional[Decimal] = None
+    table_id: Optional[int] = None
+
+    @field_validator("tip")
+    def tip_must_be_positive(cls, v):
+        if v is not None and v < 0:
+            raise ValueError("Tip cannot be negative")
+        return v
+
+class OrderCreate(OrderBase):
+    employee_id: Optional[int] = None  
+    items: Optional[List[OrderItemCreateInline]] = []  
+
+class OrderResponse(BaseModel):
+    order_id: int
+    date: date
+    time: time
+    tip: Optional[Decimal] = None
+    customer_id: int
+    employee_id: Optional[int] = None
+    table_id: Optional[int] = None
+    items: List[OrderItemResponse] = []  
+
+    class Config:
+        from_attributes = True
+
+
+
 class PaymentBase(BaseModel):
     payment_date: date
     method: str
@@ -194,7 +210,7 @@ class PaymentResponse(PaymentBase):
         from_attributes = True
 
 
-# Reservation 
+
 class ReservationBase(BaseModel):
     date: date
     time: time
@@ -211,7 +227,7 @@ class ReservationResponse(ReservationBase):
         from_attributes = True
 
 
-# Rate
+
 class RateBase(BaseModel):
     rating: int
     comment: Optional[str] = None
@@ -233,7 +249,7 @@ class RateResponse(RateBase):
         from_attributes = True
 
 
-# Auth
+
 class Token(BaseModel):
     access_token: str
     token_type: str

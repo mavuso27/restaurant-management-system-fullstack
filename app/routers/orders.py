@@ -63,22 +63,21 @@ def create_order(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    
     now = datetime.now(timezone.utc)
     
     new_order = Order(
         date=now.date(),
         time=now.time(),
-        tip=getattr(order, 'tip', 0.0) or 0.0,
+        tip=getattr(order, 'tip', None),  
         customer_id=current_user.customer_id,  
-        employee_id=getattr(order, 'employee_id', None), # Optional for customer orders
-        table_id=order.table_id
+        employee_id=getattr(order, 'employee_id', None),  
+        table_id=getattr(order, 'table_id', None)
     )
     db.add(new_order)
     db.commit()
     db.refresh(new_order)
 
-   
+
     if hasattr(order, 'items') and order.items:
         for item_data in order.items:
             new_item = OrderItem(
