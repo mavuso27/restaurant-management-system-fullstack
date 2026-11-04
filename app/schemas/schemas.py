@@ -1,8 +1,8 @@
-from pydantic import BaseModel, EmailStr, field_validator
+import datetime as dt
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List
 from datetime import date, time
 from decimal import Decimal
-
 
 
 class CategoryBase(BaseModel):
@@ -17,7 +17,6 @@ class CategoryResponse(CategoryBase):
         from_attributes = True
 
 
-
 class IngredientBase(BaseModel):
     name: str
     amount: Decimal
@@ -30,7 +29,6 @@ class IngredientResponse(IngredientBase):
     ing_no: int
     class Config:
         from_attributes = True
-
 
 
 class SupplierBase(BaseModel):
@@ -48,7 +46,6 @@ class SupplierResponse(SupplierBase):
         from_attributes = True
 
 
-# 
 class TableBase(BaseModel):
     capacity: int
     location: str
@@ -61,7 +58,6 @@ class TableResponse(TableBase):
     table_id: int
     class Config:
         from_attributes = True
-
 
 
 class EmployeeBase(BaseModel):
@@ -79,8 +75,8 @@ class EmployeeResponse(EmployeeBase):
     employee_id: int
     class Config:
         from_attributes = True
-        
-        
+
+
 class CustomerBase(BaseModel):
     name: str
     phone: str
@@ -96,7 +92,6 @@ class CustomerResponse(CustomerBase):
     join_date: Optional[date] = None
     class Config:
         from_attributes = True
-
 
 
 class MealBase(BaseModel):
@@ -126,7 +121,6 @@ class MealResponse(MealBase):
         from_attributes = True
 
 
-
 class OrderItemBase(BaseModel):
     quantity: int
     order_id: int
@@ -147,7 +141,6 @@ class OrderItemResponse(OrderItemBase):
         from_attributes = True
 
 
-
 class OrderItemCreateInline(BaseModel):
     meal_id: int
     quantity: int
@@ -159,7 +152,6 @@ class OrderItemCreateInline(BaseModel):
         return v
 
 
-# Order
 class OrderBase(BaseModel):
     tip: Optional[Decimal] = None
     table_id: Optional[int] = None
@@ -171,8 +163,8 @@ class OrderBase(BaseModel):
         return v
 
 class OrderCreate(OrderBase):
-    employee_id: Optional[int] = None  
-    items: Optional[List[OrderItemCreateInline]] = []  
+    employee_id: Optional[int] = None
+    items: Optional[List[OrderItemCreateInline]] = []
 
 class OrderResponse(BaseModel):
     order_id: int
@@ -182,11 +174,49 @@ class OrderResponse(BaseModel):
     customer_id: int
     employee_id: Optional[int] = None
     table_id: Optional[int] = None
-    items: List[OrderItemResponse] = []  
+    items: List[OrderItemResponse] = []
 
     class Config:
         from_attributes = True
 
+
+
+
+class OrderLineIn(BaseModel):
+    meal_id: int
+    quantity: int = Field(gt=0, le=50)
+
+
+class OrderPlaceRequest(BaseModel):
+    table_id: int
+    tip: Decimal = Field(default=Decimal("0.00"), ge=0, le=1000, decimal_places=2)
+    items: List[OrderLineIn] = Field(min_length=1)
+
+
+class TipUpdate(BaseModel):
+    tip: Decimal = Field(ge=0, le=1000, decimal_places=2)
+
+
+class OrderLine(BaseModel):
+    order_item_id: int
+    meal_id: int
+    meal_name: str
+    category: str
+    unit_price: Decimal
+    quantity: int
+    line_total: Decimal
+
+
+class OrderDetail(BaseModel):
+    order_id: int
+    date: dt.date
+    time: dt.time
+    customer_id: int
+    table_id: int
+    items: List[OrderLine]
+    subtotal: Decimal
+    tip: Decimal
+    total: Decimal
 
 
 class PaymentBase(BaseModel):
@@ -210,7 +240,6 @@ class PaymentResponse(PaymentBase):
         from_attributes = True
 
 
-
 class ReservationBase(BaseModel):
     date: date
     time: time
@@ -225,7 +254,6 @@ class ReservationResponse(ReservationBase):
     reservation_id: int
     class Config:
         from_attributes = True
-
 
 
 class RateBase(BaseModel):
@@ -247,7 +275,6 @@ class RateResponse(RateBase):
     rate_id: int
     class Config:
         from_attributes = True
-
 
 
 class Token(BaseModel):
