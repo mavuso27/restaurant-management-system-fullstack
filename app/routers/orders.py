@@ -28,7 +28,6 @@ def get_all_orders(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    
     if current_user.is_admin:
         return db.query(Order).all()
     return db.query(Order).filter(
@@ -48,7 +47,6 @@ def get_order(
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
         
-    
     if not current_user.is_admin and order.customer_id != current_user.customer_id:
         raise HTTPException(
             status_code=403,
@@ -71,14 +69,27 @@ def create_order(
     new_order = Order(
         date=now.date(),
         time=now.time(),
-        tip=order.tip,
+        tip=getattr(order, 'tip', 0.0) or 0.0,
         customer_id=current_user.customer_id,  
-        employee_id=order.employee_id,
+        employee_id=getattr(order, 'employee_id', None), # Optional for customer orders
         table_id=order.table_id
     )
     db.add(new_order)
     db.commit()
     db.refresh(new_order)
+
+   
+    if hasattr(order, 'items') and order.items:
+        for item_data in order.items:
+            new_item = OrderItem(
+                quantity=item_data.quantity,
+                order_id=new_order.order_id,
+                meal_id=item_data.meal_id
+            )
+            db.add(new_item)
+        db.commit()
+        db.refresh(new_order)
+
     return new_order
 
 
@@ -94,7 +105,6 @@ def add_order_item(
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
         
-    
     if not current_user.is_admin and order.customer_id != current_user.customer_id:
         raise HTTPException(
             status_code=403,
