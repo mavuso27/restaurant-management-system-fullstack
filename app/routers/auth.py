@@ -10,6 +10,12 @@ from app.config import settings
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.security.security import verify_token, security
 
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
+
 router = APIRouter(tags=["Authentication"])
 
 GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize"
@@ -18,6 +24,7 @@ GITHUB_USER_URL = "https://api.github.com/user"
 
 
 @router.get("/login")
+@limiter.limit("10/minute") # Added rate limit
 def github_login(request: Request, response: Response):
     state = secrets.token_urlsafe(32)
     
@@ -36,6 +43,7 @@ def github_login(request: Request, response: Response):
 
 
 @router.get("/callback")
+@limiter.limit("10/minute")
 async def github_callback(
     request: Request, 
     response: Response, 
@@ -88,7 +96,7 @@ async def github_callback(
     
         customer = Customer(
             name=github_name,
-            phone="N/A",
+            phone=f"gh-{github_id}",
             address="N/A",
             email=github_email,
             country="Unknown",
@@ -103,7 +111,7 @@ async def github_callback(
 
     return {"access_token": access_token, "token_type": "bearer", "user": github_name}
 
-#-------I will start debugging from here.
+
 @router.get("/me", tags=["Authentication"])
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
     """

@@ -28,7 +28,7 @@ def get_all_orders(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    # Secure Authorization Boundaries: Admins scan everything, clients get their own historical records only
+    
     if current_user.is_admin:
         return db.query(Order).all()
     return db.query(Order).filter(

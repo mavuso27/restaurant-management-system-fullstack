@@ -12,7 +12,7 @@ limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/customers", tags=["Customers"])
 
 
-# ─── HELPER: Admin check ────────────────────────────────
+
 def require_admin(current_user):
     if not current_user.is_admin:
         raise HTTPException(
@@ -21,7 +21,6 @@ def require_admin(current_user):
         )
 
 
-# ─── 1. STATIC CONSUMER ENDPOINTS (Must go first!) ──────
 
 @router.get("/me", response_model=CustomerResponse)
 @limiter.limit("20/minute")

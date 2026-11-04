@@ -1,7 +1,7 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings
 
-# Build a absolute path to the root directory where .env lives
+
 BASE_DIR = Path(__file__).resolve().parent
 
 class Settings(BaseSettings):
